@@ -108,8 +108,8 @@ Here is a list of all available properties for animating a particle effect. Plea
 | EndRotation | Float | *Optional*: Target rotation in degrees. |
 | RotationFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the rotation. |
 | ColorFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's color. Example: "math.sin". |
-| StartColor | Vector | *Optional*: The starting color of the effect as a Vector. Color objects cannot be networked. |
-| EndColor | Vector | *Optional*: The target color of the effect as a Vector. Color objects cannot be networked. |
+| StartColor | Color | *Optional*: The starting color of the effect. |
+| EndColor | Color | *Optional*: The target color of the effect. |
 | ColorFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the color. |
 | AlphaFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's alpha. Example: "math.sin". |
 | StartAlpha | Float | **Mandatory**: The starting alpha of the effect. |
