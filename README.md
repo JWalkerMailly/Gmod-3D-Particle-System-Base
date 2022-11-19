@@ -96,7 +96,6 @@ particleEffect:Spawn();
 Here is a list of all available properties for animating a particle effect. Please note that all animation properties are reliant on LifeTime. LifeTime is used to compute a delta [0..1] to be used as interpolation for the duration of the effect. Each property has its own Getter/Setter.
 | Property | Type | Usage |
 |--|--|--|
-| Model | String | **Mandatory**: The model used for the 3D effect. |
 | Material | String | *Optional*: The material override to be applied on the model. This field is optional if your model already has a material applied. |
 | Pos | Vector | **Mandatory**: Position of the effect. |
 | Angles | Angle | *Optional*: The angle of the effect. If unsure set Angle(0, 0, 0) |
