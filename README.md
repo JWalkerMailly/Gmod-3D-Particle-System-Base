@@ -23,7 +23,7 @@ end
 DEFINE_BASECLASS("3d_particle_system");
 
 ENT.RenderGroup 	= RENDERGROUP_BOTH;
-ENT.LifeTime 		= 0; -- NOTE: This variable is important, it represents the lifetime of your system. It should by longer than any of the particles you will be adding in InitializeParticles. You must take into account Delay.
+ENT.LifeTime 		= 0; -- NOTE: This variable is important, it represents the lifetime of your system. It should be longer than any of the particles you will be adding in InitializeParticles. You must take into account Delay.
 
 ```
 
@@ -99,7 +99,7 @@ Here is a list of all available properties for animating a particle effect. Plea
 | Model | String | **Mandatory**: The model used for the 3D effect. |
 | Material | String | *Optional*: The material override to be applied on the model. This field is optional if your model already has a material applied. |
 | Pos | Vector | **Mandatory**: Position of the effect. |
-| Angles | Angle | **Mandatory**: The angle of the effect. If unsure set Angle(0, 0, 0) |
+| Angles | Angle | *Optional*: The angle of the effect. If unsure set Angle(0, 0, 0) |
 | Delay | Float | *Optional*: Delay in seconds before spawning the effect. |
 | LifeTime | Float | **Mandatory**: The duration of the effect in seconds. |
 | RotationFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's rotation. Example: "math.sin". |
