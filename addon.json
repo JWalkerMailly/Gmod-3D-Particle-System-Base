@@ -1,0 +1,9 @@
+{
+	"title": "3D Particle Effects Base",
+	"type": "effects",
+	"tags": ["build"],
+	"ignore":
+	[
+		"*.jpg"
+	]
+}
