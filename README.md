@@ -81,7 +81,7 @@ end
 
 ```
 
-#### Using your particle
+#### Using your particle system
 
 To use your particle system in your addon:
 ```lua
