@@ -121,3 +121,4 @@ Here is a list of all available properties for animating a particle effect. Plea
 | StartScale | Float | **Mandatory**: The starting scale of the effect. |
 | EndScale | Float | *Optional*: The target scale of the effect. |
 | ScaleFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the scale. |
+| ThinkFunction | Function | *Optional*: Function used to control the behavior of the particle. Signature is of the form *function(particle)* where particle is your instance. |
