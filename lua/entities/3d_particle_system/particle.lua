@@ -9,11 +9,13 @@ function ParticleEffect3D:New(model, system)
 		Model = model,
 		ModelCache = ClientsideModel(model),
 		Material = nil,
+		Dirty = false,
 
 		Color = Color(255, 255, 255),
 		Alpha = 255,
 		Scale = 1,
 		Rotation = 0,
+		Looping = false,
 
 		Pos = Vector(0, 0, 0),
 		Angles = Angle(0, 0, 0),
@@ -78,8 +80,13 @@ end
 
 function ParticleEffect3D:Draw()
 
-	if (self.ModelCache == NULL || self.ModelCache == nil) then
+	if (self.ModelCache == NULL || self.ModelCache == nil || self.Dirty) then
 		return;
+	end
+
+	-- Particle is finished, reset spawn time.
+	if (self.Looping && self:Finished()) then
+		self.SpawnTime = CurTime();
 	end
 
 	-- Do nothing if the particle is dead and wait for cleanup.
@@ -191,6 +198,14 @@ function ParticleEffect3D:Draw()
 	render.SetColorModulation(1, 1, 1);
 	render.SetBlend(1);
 	self.FrameTime = CurTime();
+end
+
+function ParticleEffect3D:GetLooping()
+	return self.Looping;
+end
+
+function ParticleEffect3D:SetLooping(loop)
+	self.Looping = loop;
 end
 
 function ParticleEffect3D:GetPos()
@@ -394,6 +409,7 @@ function ParticleEffect3D:Finished()
 end
 
 function ParticleEffect3D:CleanUp()
+	self.Dirty = true;
 	self.ModelCache:Remove();
 end
 
