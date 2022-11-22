@@ -102,21 +102,21 @@ Here is a list of all available properties for animating a particle effect. Plea
 | Angles | Angle | *Optional*: The angle of the effect. If unsure set Angle(0, 0, 0) |
 | Delay | Float | *Optional*: Delay in seconds before spawning the effect. |
 | LifeTime | Float | **Mandatory**: The duration of the effect in seconds. |
-| RotationFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's rotation. Example: "math.sin". |
+| RotationFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's rotation. Example: "math.sin". |
 | RotationNormal | Vector | *Optional*: Specifies the "up" direction for the effect. This is used to influence the way the final result will rotate. |
 | StartRotation | Float | *Optional*: Starting rotation in degrees. |
 | RotateAroundNormal | Bool | *Optional*: Set to true to make the particle effect spin around its "up" axis. If this is used in conjunction with RotationNormal, make sure that you initially use SetAngles on your particle effect to orient it towards your RotationNormal. |
 | EndRotation | Float | *Optional*: Target rotation in degrees. |
 | RotationFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the rotation. |
-| ColorFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's color. Example: "math.sin". |
+| ColorFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's color. Example: "math.sin". |
 | StartColor | Color | *Optional*: The starting color of the effect. |
 | EndColor | Color | *Optional*: The target color of the effect. |
 | ColorFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the color. |
-| AlphaFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's alpha. Example: "math.sin". |
+| AlphaFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's alpha. Example: "math.sin". |
 | StartAlpha | Float | **Mandatory**: The starting alpha of the effect. |
 | EndAlpha | Float | *Optional*: The target alpha of the effect. |
 | AlphaFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the alpha. |
-| ScaleFunction | String | *Optional*: The function to be used on the animation delta for interpolating the effect's scale. Example: "math.sin". |
+| ScaleFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's scale. Example: "math.sin". |
 | ScaleAxis | Vector | *Optional* Used to influence axis scaling. StartScale will also be added onto each axis.
 | StartScale | Float | **Mandatory**: The starting scale of the effect. |
 | EndScale | Float | *Optional*: The target scale of the effect. |
