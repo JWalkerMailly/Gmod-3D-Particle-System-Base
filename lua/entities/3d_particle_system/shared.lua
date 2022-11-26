@@ -18,7 +18,7 @@ PARTICLE.RenderGroup = RENDERGROUP_BOTH;
 PARTICLE.Particles 	= {};
 PARTICLE.SpawnTime 	= 0;
 PARTICLE.LifeTime 	= 0;
-PARTICLE.ThinkRate 	= 1;
+PARTICLE.Dirty 		= false;
 
 function PARTICLE:SetLifeTime(lifetime)
 	self.LifeTime = lifetime;
@@ -46,9 +46,14 @@ function PARTICLE:Think()
 		return;
 	end
 
+	-- Max think for anim type entity.
 	if (CLIENT) then self:UpdateParticles(); end
-	self:NextThink(CurTime() + self.ThinkRate);
+	self:NextThink(CurTime());
 	return true;
+end
+
+function PARTICLE:OnDestroy()
+	-- override.
 end
 
 function PARTICLE:Destroy()
@@ -60,8 +65,17 @@ function PARTICLE:Destroy()
 		end
 	end
 
-	-- Dispose of our entity (particle).
-	if (SERVER) then
-		SafeRemoveEntity(self);
+	-- Dispose of our entity (system).
+	if (!self.Dirty) then
+
+		self:OnDestroy();
+		self.Dirty = true;
+
+		-- Theory: To prevent client side models from not being garbage collected,
+		-- we set a 1 second delay + the server's tickrate. This should prevent
+		-- desync during lag and be accurate to 1 fps.
+		if (SERVER) then
+			SafeRemoveEntityDelayed(self, FrameTime() + 1);
+		end
 	end
 end
