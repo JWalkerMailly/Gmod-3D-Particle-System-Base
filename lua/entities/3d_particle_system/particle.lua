@@ -206,6 +206,20 @@ function ParticleEffect3D:Draw()
 		matScale:Scale(Vector(1, 1, 1) * self.Scale);
 	end
 
+	-- Handle parenting;
+	local renderingPos 		= self.Pos;
+	local renderingAngles 	= angles;
+	local parent 			= self.System:GetParent();
+	if (parent != NULL && parent != nil && parent:IsValid()) then
+
+		-- Transform parent world matrix using position and angle data as local transforms.
+		local parentMatrix = self.System:GetParentWorldTransformMatrix();
+		parentMatrix:Translate(renderingPos);
+		parentMatrix:Rotate(renderingAngles);
+		renderingPos = parentMatrix:GetTranslation();
+		renderingAngles = parentMatrix:GetAngles();
+	end
+
 	-- Render 3D effect using our model cache.
 	render.SetBlend(self.Alpha / 255);
 	render.SetColorModulation(self.Color.r / 255, self.Color.g / 255, self.Color.b / 255)
@@ -213,8 +227,8 @@ function ParticleEffect3D:Draw()
 	render.MaterialOverride(self.Material);
 	render.Model({
 		model = self.Model,
-		pos = self.Pos,
-		angle = angles
+		pos = renderingPos,
+		angle = renderingAngles
 	}, self.ModelCache);
 	render.MaterialOverride(nil);
 	render.SetColorModulation(1, 1, 1);
