@@ -20,14 +20,23 @@ PARTICLE.SpawnTime 	= 0;
 PARTICLE.LifeTime 	= 0;
 PARTICLE.Dirty 		= false;
 
-function PARTICLE:SetLifeTime(lifetime)
-	self.LifeTime = lifetime;
+function PARTICLE:SetupDataTables()
+	self:NetworkVar("Float", 0, "LifeTime");
 end
 
 function PARTICLE:Initialize()
 
 	self:DrawShadow(false);
 	self.SpawnTime = CurTime();
+
+	-- Backwards compatibility for old systems using the LifeTime property.
+	-- Static systems will make use of the self.LifeTime property while dynamic
+	-- systems (variable LifeTime for example) should call SetLifeTime(time)
+	-- before calling Spawn(). If you want your particles to inherit the system's
+	-- lifetime, simply avoid calling SetLifeTime on your particle in InitializeParticles().
+	if (self:GetLifeTime() == 0) then
+		self:SetLifeTime(self.LifeTime);
+	end
 
 	if (CLIENT) then
 		self:InitializeParticles();
@@ -41,7 +50,7 @@ end
 function PARTICLE:Think()
 
 	-- Cleanup if this system has finished emitting.
-	if (CurTime() > self.SpawnTime + self.LifeTime) then
+	if (CurTime() > self.SpawnTime + self:GetLifeTime()) then
 		self:Destroy();
 		return;
 	end

@@ -6,8 +6,12 @@ function ParticleEffect3D:New(model, system)
 
 	local object = {
 
+		System = system,
+
 		Model = model,
 		ModelCache = ClientsideModel(model),
+		Skin = nil,
+		BodyGroups = nil,
 		Material = nil,
 		Dirty = false,
 
@@ -22,7 +26,7 @@ function ParticleEffect3D:New(model, system)
 
 		SpawnTime = CurTime(),
 		Delay = 0,
-		LifeTime = 0,
+		LifeTime = nil,
 
 		RotationFunction = math.sin,
 		RotationNormal = Vector(0, 0, 0),
@@ -59,6 +63,24 @@ end
 
 function ParticleEffect3D:GetModel()
 	return self.Model;
+end
+
+function ParticleEffect3D:GetSkin()
+	return self.Skin;
+end
+
+function ParticleEffect3D:SetSkin(skin)
+	self.Skin = skin;
+	self.ModelCache:SetSkin(skin);
+end
+
+function ParticleEffect3D:GetBodyGroups()
+	return self.BodyGroups;
+end
+
+function ParticleEffect3D:SetBodyGroups(bodyGroups)
+	self.BodyGroups = bodyGroups;
+	self.ModelCache:SetBodyGroups(bodyGroups);
 end
 
 function ParticleEffect3D:GetMaterial()
@@ -101,7 +123,7 @@ function ParticleEffect3D:Draw()
 	end
 
 	local delay = self.Delay;
-	local delta = math.Clamp((CurTime() - (self.SpawnTime + delay)) / self.LifeTime, 0, 1);
+	local delta = math.Clamp((CurTime() - (self.SpawnTime + delay)) / self:GetLifeTime(), 0, 1);
 	local frametime = CurTime() - self.FrameTime;
 
 	-- Wait for the particle delay to finish before rendering.
@@ -241,6 +263,12 @@ function ParticleEffect3D:SetDelay(time)
 end
 
 function ParticleEffect3D:GetLifeTime()
+
+	if (self.LifeTime == nil) then
+		local systemLifeTime = self.System:GetLifeTime();
+		return math.Clamp(systemLifeTime - self.Delay, FrameTime(), systemLifeTime);
+	end
+
 	return self.LifeTime;
 end
 
@@ -405,7 +433,7 @@ function ParticleEffect3D:SetThinkFunction(func)
 end
 
 function ParticleEffect3D:Finished()
-	return CurTime() > self.SpawnTime + self.LifeTime + self.Delay;
+	return CurTime() > self.SpawnTime + self:GetLifeTime() + self.Delay;
 end
 
 function ParticleEffect3D:CleanUp()

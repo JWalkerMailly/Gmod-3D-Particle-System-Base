@@ -4,7 +4,7 @@
 Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity.
 
 ### Setup
-A test system is included as reference, it can be found in *lua/entities/3d_particle_test*. Each particle system is its own entity. Here is how to create a system from scratch:
+Test systems are included as reference, they can be found in *lua/entities/*. Each particle system is its own entity. Here is how to create a system from scratch:
 
 #### Folder Structure
 In your addons folder, create an *entities* folder in *lua* if not already present. In entities, add a folder for your particle system:
@@ -92,7 +92,12 @@ particleEffect:Spawn();
 
 ```
 
-### 3d_particle_system Callbacks
+### 3d_particle_system Properties & Callbacks
+Here is a list of properties available on the system entity. Each property has its own Getter/Setter.
+| Property | Type | Usage |
+|--|--|--|
+| LifeTime | Float | Defines the lifetime of the system. This is mainly used for dynamic lifetimes. If your system is static, you should refer to the example at the top of this readme and use the *self.LifeTime* property instead. If your system is dynamic and you wish for your particles to inherit their system's LifeTime, simply avoid using SetLifeTime on your particles in InitializeParticles.
+
 The *3d_particle_system* is a regular entity and to that effect, any base entity functions can be used on it. Here is a list of custom callbacks available for you to override in your systems.
 | Function | Realm | Usage |
 |--|--|--|
@@ -104,6 +109,8 @@ Here is a list of all available properties for animating a particle effect. Plea
 |--|--|--|
 | Looping | Bool | *Optional*: Loop particle or not. This is still dependent on the lifetime of the overall system. If you wish for your system to loop until stopped manually, set a large lifetime on the system and call *Destroy()* when ready to remove manually. |
 | Material | String | *Optional*: The material override to be applied on the model. This field is optional if your model already has a material applied. |
+| Skin | Integer | Sets the skin of the model being used for the particle. |
+| BodyGroups | String | Sets the bodygroups of the model being used for the particle. Refer to https://wiki.facepunch.com/gmod/Entity:SetBodyGroups for how to use. |
 | Pos | Vector | **Mandatory**: Position of the effect. |
 | Angles | Angle | *Optional*: The angle of the effect. If unsure set Angle(0, 0, 0) |
 | Delay | Float | *Optional*: Delay in seconds before spawning the effect. |
