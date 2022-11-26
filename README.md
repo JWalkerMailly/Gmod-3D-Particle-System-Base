@@ -92,7 +92,13 @@ particleEffect:Spawn();
 
 ```
 
-### Properties
+### 3d_particle_system Callbacks
+The *3d_particle_system* is a regular entity and to that effect, any base entity functions can be used on it. Here is a list of custom callbacks available for you to override in your systems.
+| Function | Realm | Usage |
+|--|--|--|
+| OnDestroy | Shared | Callback when the particle system dies. |
+
+### ParticleEffect3D Properties
 Here is a list of all available properties for animating a particle effect. Please note that all animation properties are reliant on LifeTime. LifeTime is used to compute a delta [0..1] to be used as interpolation for the duration of the effect. Each property has its own Getter/Setter.
 | Property | Type | Usage |
 |--|--|--|

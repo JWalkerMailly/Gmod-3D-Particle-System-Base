@@ -11,3 +11,7 @@ DEFINE_BASECLASS("3d_particle_system");
 
 PARTICLE.RenderGroup 	= RENDERGROUP_BOTH;
 PARTICLE.LifeTime 		= 2.4;
+
+function PARTICLE:OnDestroy()
+	print("OnDestroy callback test.");
+end
