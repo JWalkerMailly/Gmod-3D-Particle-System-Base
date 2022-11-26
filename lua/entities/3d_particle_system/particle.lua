@@ -8,6 +8,8 @@ function ParticleEffect3D:New(model, system)
 
 		Model = model,
 		ModelCache = ClientsideModel(model),
+		Skin = nil,
+		BodyGroups = nil,
 		Material = nil,
 		Dirty = false,
 
@@ -59,6 +61,24 @@ end
 
 function ParticleEffect3D:GetModel()
 	return self.Model;
+end
+
+function ParticleEffect3D:GetSkin()
+	return self.Skin;
+end
+
+function ParticleEffect3D:SetSkin(skin)
+	self.Skin = skin;
+	self.ModelCache:SetSkin(skin);
+end
+
+function ParticleEffect3D:GetBodyGroups()
+	return self.BodyGroups;
+end
+
+function ParticleEffect3D:SetBodyGroups(bodyGroups)
+	self.BodyGroups = bodyGroups;
+	self.ModelCache:SetBodyGroups(bodyGroups);
 end
 
 function ParticleEffect3D:GetMaterial()
