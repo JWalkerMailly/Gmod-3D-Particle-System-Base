@@ -92,7 +92,11 @@ particleEffect:Spawn();
 
 ```
 
-### 3d_particle_system Callbacks
+### 3d_particle_system Properties & Callbacks
+Here is a list of properties available on the system entity. Each property has its own Getter/Setter.
+| Property | Type | Usage |
+|--|--|--|
+| LifeTime | Float | Defines the lifetime of the system. This is mainly used for dynamic lifetimes. If your system is static, you should refer to the example at the top of this readme and use the *self.LifeTime* property instead. If your system is dynamic and you wish for your particles to inherit their system's LifeTime, simply avoid using SetLifeTime on your particles in InitializeParticles.
 The *3d_particle_system* is a regular entity and to that effect, any base entity functions can be used on it. Here is a list of custom callbacks available for you to override in your systems.
 | Function | Realm | Usage |
 |--|--|--|
