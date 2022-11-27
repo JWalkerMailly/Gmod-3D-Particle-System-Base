@@ -28,7 +28,7 @@ function ParticleEffect3D:New(model, system, config)
 			BodyGroups = nil,
 			Material = nil,
 
-			Pos = Vector(0, 0, 0),
+			Pos = nil,
 			Angles = Angle(0, 0, 0),
 
 			Delay = 0,
@@ -218,7 +218,7 @@ function ParticleEffect3D:Draw()
 
 	-- Handle parenting;
 	local parent = self.System:GetParent();
-	local renderingPos = self.Config.Pos;
+	local renderingPos = self:GetPos();
 	local renderingAngles = angles;
 	if (parent != NULL && parent != nil && parent:IsValid()) then
 
@@ -255,6 +255,19 @@ function ParticleEffect3D:SetLooping(loop)
 end
 
 function ParticleEffect3D:GetPos()
+
+	if (self.Config.Pos == nil) then
+
+		-- No position and no parent supplied, return the system's position for rendering.
+		local parent = self.System:GetParent();
+		if (parent == NULL || parent == nil || !parent:IsValid()) then
+			return self.System:GetPos();
+		end
+
+		-- No position supplied, parent must be supplied, return local origin.
+		return Vector(0, 0, 0);
+	end
+
 	return self.Config.Pos;
 end
 
