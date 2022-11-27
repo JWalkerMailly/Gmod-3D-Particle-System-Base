@@ -29,6 +29,7 @@ function ParticleEffect3D:New(model, system, config)
 			Material = nil,
 
 			Pos = nil,
+			LocalPos = Vector(0, 0, 0),
 			Angles = Angle(0, 0, 0),
 
 			Delay = 0,
@@ -218,7 +219,7 @@ function ParticleEffect3D:Draw()
 
 	-- Handle parenting;
 	local parent = self.System:GetParent();
-	local renderingPos = self:GetPos();
+	local renderingPos = self:GetPos() + self.Config.LocalPos;
 	local renderingAngles = angles;
 	if (parent != NULL && parent != nil && parent:IsValid()) then
 
@@ -273,6 +274,14 @@ end
 
 function ParticleEffect3D:SetPos(pos)
 	self.Config.Pos = Vector(pos);
+end
+
+function ParticleEffect3D:GetLocalPos()
+	return self.Config.LocalPos;
+end
+
+function ParticleEffect3D:SetLocalPos(pos)
+	self.Config.LocalPos = Vector(pos);
 end
 
 function ParticleEffect3D:GetAngles()
