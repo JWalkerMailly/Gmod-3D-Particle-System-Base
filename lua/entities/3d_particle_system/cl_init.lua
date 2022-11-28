@@ -1,6 +1,5 @@
 
 include("shared.lua");
-include("compatibility.lua")
 
 function PARTICLE:InitializeParticles(particles)
 
@@ -27,7 +26,30 @@ function PARTICLE:InitializeParticles(particles)
 	end
 
 	-- Compatibility feature for particles created with the particle editor addon.
-	self:ParseConfigurationFile();
+	local config = self:GetConfig();
+	if (config != nil && config != "") then
+
+		if (GLOBALS_3D_PARTICLE_EDITOR == nil) then
+			ErrorNoHalt("Cannot parse particle configuration file without 3D Particle Editor.\n");
+			return;
+		end
+
+		-- Use the supplied config path, else default to data.
+		-- This is useful for particle systems that ship with addons but use
+		-- the new configuration feature from the particle editor.
+		local configPath = self:GetConfigPath();
+		if (configPath == nil || configPath == "") then configPath = "DATA"; end
+
+		local configExists = file.Exists(config, configPath);
+		if (!configExists) then return; end
+
+		-- Parse config file into the particle system if valid. This code is effectively the same
+		-- as the one found in the particle editor addon. We include it here for compatibility reasons
+		-- if people do not wish no install the editor. This way, addons can ship using only the
+		-- 3D particle effects base without the need to the 3D particle effects editor to be installed.
+		local data = file.Read(config, configPath)
+		self:InitializeParticles(GLOBALS_3D_PARTICLE_EDITOR:ParseConfiguration(data));
+	end
 end
 
 function PARTICLE:UpdateParticles()

@@ -5,7 +5,6 @@ PARTICLE = ENT;
 if (SERVER) then
 	AddCSLuaFile("shared.lua");
 	AddCSLuaFile("cl_init.lua");
-	AddCSLuaFile("compatibility.lua");
 
 	AddCSLuaFile("particle.lua");
 end
