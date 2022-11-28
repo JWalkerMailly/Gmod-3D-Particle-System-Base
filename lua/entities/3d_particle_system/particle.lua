@@ -200,7 +200,7 @@ function ParticleEffect3D:Draw()
 	end
 
 	-- Compute rotation based on the desired behavior.
-	local angles = self.Config.Angles;
+	local angles = self:GetAngles();
 	if (self.Config.RotateAroundNormal) then
 		angles:RotateAroundAxis(self.Config.RotationNormal, (self.Config.EndRotation || 0) * frametime);
 	else
@@ -290,6 +290,11 @@ function ParticleEffect3D:SetLocalPos(pos)
 end
 
 function ParticleEffect3D:GetAngles()
+
+	if (self.Config.Angles == nil) then
+		return self.System:GetAngles();
+	end
+
 	return self.Config.Angles;
 end
 

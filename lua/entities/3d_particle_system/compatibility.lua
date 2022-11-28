@@ -58,6 +58,7 @@ function PARTICLE:ParseConfigurationFile()
 		local configParticles = util.JSONToTable(file.Read(config, configPath));
 		for k,v in pairs(configParticles) do
 			if (v.InheritPos) 		then v.Pos 			= nil; end
+			if (v.InheritAngles) 	then v.Angles		= nil; end
 			if (v.InheritLifeTime) 	then v.LifeTime 	= nil; end
 			if (!v.UseEndRotation) 	then v.EndRotation 	= nil; end
 			if (!v.UseEndColor) 	then v.EndColor 	= nil; end
