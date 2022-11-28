@@ -21,6 +21,24 @@ function PARTICLE:InitializeParticles(particles)
 		for k,v in pairs(particles) do
 			ParticleEffect3D:New(nil, self, v);
 		end
+
+		return;
+	end
+
+	local config = self:GetConfig();
+	if (config != nil && config != "") then
+
+		-- Use the supplied config path, else default to data.
+		-- This is useful for particle systems that ship with addons but use
+		-- the new configuration feature from the particle editor.
+		local configPath = self:GetConfigPath() || "DATA";
+		local configExists = file.Exists(config, configPath);
+		if (!configExists) then return; end
+
+		-- Parse config file into the particle system if valid.
+		for k,v in pairs(util.JSONToTable(file.Read(config, configPath))) do
+			ParticleEffect3D:New(nil, self, v);
+		end
 	end
 end
 

@@ -22,6 +22,8 @@ PARTICLE.Dirty 		= false;
 
 function PARTICLE:SetupDataTables()
 	self:NetworkVar("Float", 0, "LifeTime");
+	self:NetworkVar("Config", 0, "String");
+	self:NetworkVar("ConfigPath", 1, "String");
 end
 
 function PARTICLE:Initialize()
