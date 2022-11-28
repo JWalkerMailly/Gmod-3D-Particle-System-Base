@@ -5,6 +5,7 @@ PARTICLE = ENT;
 if (SERVER) then
 	AddCSLuaFile("shared.lua");
 	AddCSLuaFile("cl_init.lua");
+	AddCSLuaFile("compatibility.lua");
 
 	AddCSLuaFile("particle.lua");
 end
@@ -22,8 +23,8 @@ PARTICLE.Dirty 		= false;
 
 function PARTICLE:SetupDataTables()
 	self:NetworkVar("Float", 0, "LifeTime");
-	self:NetworkVar("Config", 0, "String");
-	self:NetworkVar("ConfigPath", 1, "String");
+	self:NetworkVar("String", 0, "Config");
+	self:NetworkVar("String", 1, "ConfigPath");
 end
 
 function PARTICLE:Initialize()
