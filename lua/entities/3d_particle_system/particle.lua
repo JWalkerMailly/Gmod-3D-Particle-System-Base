@@ -15,6 +15,7 @@ function ParticleEffect3D:New(model, system, config)
 	object.Color = Color(255, 255, 255);
 	object.Alpha = 255;
 	object.Scale = 1;
+	object.AxisScale = Vector(1, 1, 1);
 	object.Rotation = 0;
 
 	-- Setup default configuration.
@@ -54,10 +55,14 @@ function ParticleEffect3D:New(model, system, config)
 			AlphaFunctionMod = 0,
 
 			ScaleFunction = math.sin,
-			ScaleAxis = Vector(0, 0, 0),
 			StartScale = 0,
 			EndScale = nil,
-			ScaleFunctionMod = 0
+			ScaleFunctionMod = 0,
+
+			AxisScaleFunction = math.sin,
+			StartAxisScale = Vector(0, 0, 0),
+			EndAxisScale = Vector(0, 0, 0),
+			AxisScaleFunctionMod = 0
 		};
 	end
 
@@ -162,6 +167,11 @@ function ParticleEffect3D:Draw()
 		self.Scale = self.Config.StartScale;
 	end
 
+	-- Setup axis scale.
+	if (self.Config.StartAxisScale != nil) then
+		self.AxisScale = self.Config.StartAxisScale;
+	end
+
 	-- Setup roll.
 	if (self.Config.StartRotation != nil) then
 		self.Rotation = self.Config.StartRotation;
@@ -191,6 +201,14 @@ function ParticleEffect3D:Draw()
 			self.Config.EndScale);
 	end
 
+	-- Particle effect axis size parameters.
+	if (self.Config.EndAxisScale != nil) then
+		self.AxisScale = LerpVector(
+			self.Config.AxisScaleFunction(delta * self.Config.AxisScaleFunctionMod),
+			self.Config.StartAxisScale,
+			self.Config.EndAxisScale);
+	end
+
 	-- Particle effect rotation parameters.
 	if (self.Config.EndRotation != nil) then
 		self.Rotation = Lerp(
@@ -210,12 +228,7 @@ function ParticleEffect3D:Draw()
 
 	-- Used for axis scaling.
 	local matScale = Matrix();
-	local initialScale = Vector(1, 1, 1) * self.Config.StartScale;
-	if (self.Config.ScaleAxis != Vector(0, 0, 0)) then
-		matScale:Scale(initialScale + self.Config.ScaleAxis * self.Scale);
-	else
-		matScale:Scale(Vector(1, 1, 1) * self.Scale);
-	end
+	matScale:Scale(self.AxisScale * self.Scale);
 
 	-- Handle parenting;
 	local parent = self.System:GetParent();
