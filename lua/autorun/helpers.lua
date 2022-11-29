@@ -7,11 +7,6 @@ function game.Add3DParticles(particleFile, path)
 
 	if (particleFile != nil && particleFile != "" && string.match(particleFile, ".json") != nil) then
 
-		if (GLOBALS_3D_PARTICLE_EDITOR == nil) then
-			ErrorNoHalt("Cannot parse particle configuration file without 3D Particle Editor. Please install the '3D Particle System Editor' addon for configuration file support.\n");
-			return;
-		end
-
 		-- Use the supplied config path, else default to data.
 		-- This is useful for particle systems that ship with addons but use
 		-- the new configuration feature from the particle editor.
@@ -29,7 +24,7 @@ function game.Add3DParticles(particleFile, path)
 		-- Parse config file into cache.
 		local data = file.Read(particleFile, path)
 		if (CLIENT) then
-			game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".json", "")] = GLOBALS_3D_PARTICLE_EDITOR:ParseConfiguration(data);
+			game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".json", "")] = GLOBALS_3D_PARTICLE_PARSER:ParseConfiguration(data);
 		end
 	end
 end
