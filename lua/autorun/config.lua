@@ -5,7 +5,7 @@ game.__3DParticleCache = {};
 -- This must be called from the shared realm in order to send resources to clients.
 function game.Add3DParticles(particleFileName, particleFilePath)
 
-	if (particleFileName != nil && particleFileName != "" && string.match(particleFileName, ".pcf3d") != nil) then
+	if (particleFileName != nil && particleFileName != "" && string.match(particleFileName, ".json") != nil) then
 
 		if (GLOBALS_3D_PARTICLE_EDITOR == nil) then
 			ErrorNoHalt("Cannot parse particle configuration file without 3D Particle Editor. Please install the '3D Particle System Editor' addon for configuration file support.\n");
@@ -29,7 +29,7 @@ function game.Add3DParticles(particleFileName, particleFilePath)
 		-- Parse config file into cache.
 		local data = file.Read(particleFileName, particleFilePath)
 		if (CLIENT) then
-			game.__3DParticleCache[string.Replace(string.match(particleFileName, "[^/]+$"), ".pcf3d", "")] = GLOBALS_3D_PARTICLE_EDITOR:ParseConfiguration(data);
+			game.__3DParticleCache[string.Replace(string.match(particleFileName, "[^/]+$"), ".json", "")] = GLOBALS_3D_PARTICLE_EDITOR:ParseConfiguration(data);
 		end
 	end
 end
