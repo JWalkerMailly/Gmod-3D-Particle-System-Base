@@ -25,9 +25,16 @@ function PARTICLE:InitializeParticles(particles)
 		return;
 	end
 
-	-- Compatibility feature for particles created with the particle editor addon.
+	-- Load configuration from cache.
 	local config = self:GetConfig();
 	if (config != nil && config != "") then
+		self:SetConfig("");
+		self:InitializeParticles(game.__3DParticleCache[config]);
+	end
+
+	-- This should only be used for testing purposes.
+	local configFile = self:GetConfigFile();
+	if (configFile != nil && configFile != "") then
 
 		if (GLOBALS_3D_PARTICLE_EDITOR == nil) then
 			ErrorNoHalt("Cannot parse particle configuration file without 3D Particle Editor.\n");
@@ -40,14 +47,17 @@ function PARTICLE:InitializeParticles(particles)
 		local configPath = self:GetConfigPath();
 		if (configPath == nil || configPath == "") then configPath = "DATA"; end
 
-		local configExists = file.Exists(config, configPath);
-		if (!configExists) then return; end
+		local configExists = file.Exists(configFile, configPath);
+		if (!configExists) then
+			ErrorNoHalt("Could not find configuration file: " .. configFile .. ".\n");
+			return;
+		end
 
 		-- Parse config file into the particle system if valid. This code is effectively the same
 		-- as the one found in the particle editor addon. We include it here for compatibility reasons
 		-- if people do not wish no install the editor. This way, addons can ship using only the
 		-- 3D particle effects base without the need to the 3D particle effects editor to be installed.
-		local data = file.Read(config, configPath)
+		local data = file.Read(configFile, configPath)
 		self:InitializeParticles(GLOBALS_3D_PARTICLE_EDITOR:ParseConfiguration(data));
 	end
 end

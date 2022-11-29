@@ -23,7 +23,8 @@ PARTICLE.Dirty 		= false;
 function PARTICLE:SetupDataTables()
 	self:NetworkVar("Float", 0, "LifeTime");
 	self:NetworkVar("String", 0, "Config");
-	self:NetworkVar("String", 1, "ConfigPath");
+	self:NetworkVar("String", 1, "ConfigFile");	-- This should only be used for testing purposes.
+	self:NetworkVar("String", 2, "ConfigPath");	-- This should only be used for testing purposes.
 end
 
 function PARTICLE:Initialize()
