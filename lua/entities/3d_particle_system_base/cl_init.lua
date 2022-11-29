@@ -19,7 +19,7 @@ function PARTICLE:InitializeParticles(particles)
 
 		-- Initialize particles from config.
 		for k,v in pairs(particles) do
-			ParticleEffect3DConfigurable:New(nil, self, v);
+			Particle3D:New(nil, self, v);
 		end
 
 		return;

@@ -1,8 +1,8 @@
 
-ParticleEffect3DConfigurable = {};
-ParticleEffect3DConfigurable.__index = ParticleEffect3DConfigurable;
+Particle3D = {};
+Particle3D.__index = Particle3D;
 
-function ParticleEffect3DConfigurable:New(model, system, config)
+function Particle3D:New(model, system, config)
 
 	-- Setup base object.
 	local object = {};
@@ -73,42 +73,42 @@ function ParticleEffect3DConfigurable:New(model, system, config)
 	object.ModelCache:SetNoDraw(true);
 
 	-- Create object from metadata.
-	setmetatable(object, ParticleEffect3DConfigurable);
+	setmetatable(object, Particle3D);
 	system:Add(object);
 	return object;
 end
 
-function ParticleEffect3DConfigurable:GetModel()
+function Particle3D:GetModel()
 	return self.Config.Model;
 end
 
-function ParticleEffect3DConfigurable:GetSkin()
+function Particle3D:GetSkin()
 	return self.Config.Skin;
 end
 
-function ParticleEffect3DConfigurable:SetSkin(skin)
+function Particle3D:SetSkin(skin)
 	self.Config.Skin = skin;
 	self.ModelCache:SetSkin(skin);
 end
 
-function ParticleEffect3DConfigurable:GetBodyGroups()
+function Particle3D:GetBodyGroups()
 	return self.Config.BodyGroups;
 end
 
-function ParticleEffect3DConfigurable:SetBodyGroups(bodyGroups)
+function Particle3D:SetBodyGroups(bodyGroups)
 	self.Config.BodyGroups = bodyGroups;
 	self.ModelCache:SetBodyGroups(bodyGroups);
 end
 
-function ParticleEffect3DConfigurable:GetMaterial()
+function Particle3D:GetMaterial()
 	return self.Config.Material;
 end
 
-function ParticleEffect3DConfigurable:SetMaterial(texture)
+function Particle3D:SetMaterial(texture)
 	self.Config.Material = Material(texture);
 end
 
-function ParticleEffect3DConfigurable:LerpColor(t, from, to)
+function Particle3D:LerpColor(t, from, to)
 	return Color(
 		Lerp(t, from.r, to.r),
 		Lerp(t, from.g, to.g),
@@ -117,7 +117,7 @@ function ParticleEffect3DConfigurable:LerpColor(t, from, to)
 	);
 end
 
-function ParticleEffect3DConfigurable:Draw()
+function Particle3D:Draw()
 
 	if (self.ModelCache == NULL || self.ModelCache == nil || self.Dirty) then
 		return;
@@ -278,15 +278,15 @@ function ParticleEffect3DConfigurable:Draw()
 	self.FrameTime = CurTime();
 end
 
-function ParticleEffect3DConfigurable:GetLooping()
+function Particle3D:GetLooping()
 	return self.Config.Looping;
 end
 
-function ParticleEffect3DConfigurable:SetLooping(loop)
+function Particle3D:SetLooping(loop)
 	self.Config.Looping = loop;
 end
 
-function ParticleEffect3DConfigurable:GetPos()
+function Particle3D:GetPos()
 
 	local parent = self.System:GetParent();
 	local hasParent = (parent != NULL && parent != nil && parent:IsValid());
@@ -310,35 +310,35 @@ function ParticleEffect3DConfigurable:GetPos()
 	return self.System:GetPos();
 end
 
-function ParticleEffect3DConfigurable:SetPos(pos)
+function Particle3D:SetPos(pos)
 	self.Config.Pos = Vector(pos);
 end
 
-function ParticleEffect3DConfigurable:GetAngles()
+function Particle3D:GetAngles()
 	return self.Config.Angles;
 end
 
-function ParticleEffect3DConfigurable:SetAngles(ang)
+function Particle3D:SetAngles(ang)
 	self.Config.Angles = Angle(ang);
 end
 
-function ParticleEffect3DConfigurable:GetSpawnTime()
+function Particle3D:GetSpawnTime()
 	return self.SpawnTime;
 end
 
-function ParticleEffect3DConfigurable:SetSpawnTime(time)
+function Particle3D:SetSpawnTime(time)
 	self.SpawnTime = time;
 end
 
-function ParticleEffect3DConfigurable:GetDelay()
+function Particle3D:GetDelay()
 	return self.Config.Delay;
 end
 
-function ParticleEffect3DConfigurable:SetDelay(time)
+function Particle3D:SetDelay(time)
 	self.Config.Delay = time;
 end
 
-function ParticleEffect3DConfigurable:GetLifeTime()
+function Particle3D:GetLifeTime()
 
 	if (self.Config.LifeTime == nil) then
 		local systemLifeTime = self.System:GetLifeTime();
@@ -348,173 +348,173 @@ function ParticleEffect3DConfigurable:GetLifeTime()
 	return self.Config.LifeTime;
 end
 
-function ParticleEffect3DConfigurable:SetLifeTime(time)
+function Particle3D:SetLifeTime(time)
 	self.Config.LifeTime = time;
 end
 
-function ParticleEffect3DConfigurable:GetRotationFunction()
+function Particle3D:GetRotationFunction()
 	return self.Config.RotationFunction;
 end
 
-function ParticleEffect3DConfigurable:SetRotationFunction(name)
+function Particle3D:SetRotationFunction(name)
 	self.Config.RotationFunction = name;
 end
 
-function ParticleEffect3DConfigurable:GetRotationNormal()
+function Particle3D:GetRotationNormal()
 	return self.Config.RotationNormal;
 end
 
-function ParticleEffect3DConfigurable:SetRotationNormal(normal)
+function Particle3D:SetRotationNormal(normal)
 	self.Config.RotationNormal = Vector(normal);
 end
 
-function ParticleEffect3DConfigurable:ConstantRotation()
+function Particle3D:ConstantRotation()
 	return self.Config.ConstantRotation;
 end
 
-function ParticleEffect3DConfigurable:ConstantRotation(constant)
+function Particle3D:ConstantRotation(constant)
 	self.Config.ConstantRotation = constant;
 end
 
-function ParticleEffect3DConfigurable:GetStartRotation()
+function Particle3D:GetStartRotation()
 	return self.Config.StartRotation;
 end
 
-function ParticleEffect3DConfigurable:SetStartRotation(rotation)
+function Particle3D:SetStartRotation(rotation)
 	self.Config.StartRotation = rotation;
 end
 
-function ParticleEffect3DConfigurable:GetEndRotation()
+function Particle3D:GetEndRotation()
 	return self.Config.EndRotation;
 end
 
-function ParticleEffect3DConfigurable:SetEndRotation(rotation)
+function Particle3D:SetEndRotation(rotation)
 	self.Config.EndRotation = rotation;
 end
 
-function ParticleEffect3DConfigurable:GetRotationFunctionMod()
+function Particle3D:GetRotationFunctionMod()
 	return self.Config.RotationFunctionMod;
 end
 
-function ParticleEffect3DConfigurable:SetRotationFunctionMod(mod)
+function Particle3D:SetRotationFunctionMod(mod)
 	self.Config.RotationFunctionMod = mod;
 end
 
-function ParticleEffect3DConfigurable:GetColorFunction()
+function Particle3D:GetColorFunction()
 	return self.Config.ColorFunction;
 end
 
-function ParticleEffect3DConfigurable:SetColorFunction(name)
+function Particle3D:SetColorFunction(name)
 	self.Config.ColorFunction = name;
 end
 
-function ParticleEffect3DConfigurable:GetStartColor()
+function Particle3D:GetStartColor()
 	return self.Config.StartColor;
 end
 
-function ParticleEffect3DConfigurable:SetStartColor(col)
+function Particle3D:SetStartColor(col)
 	self.Config.StartColor = Color(col.r, col.g, col.b);
 end
 
-function ParticleEffect3DConfigurable:GetEndColor()
+function Particle3D:GetEndColor()
 	return self.Config.EndColor;
 end
 
-function ParticleEffect3DConfigurable:SetEndColor(col)
+function Particle3D:SetEndColor(col)
 	self.Config.EndColor = Color(col.r, col.g, col.b);
 end
 
-function ParticleEffect3DConfigurable:GetColorFunctionMod()
+function Particle3D:GetColorFunctionMod()
 	return self.Config.ColorFunctionMod;
 end
 
-function ParticleEffect3DConfigurable:SetColorFunctionMod(mod)
+function Particle3D:SetColorFunctionMod(mod)
 	self.Config.ColorFunctionMod = mod;
 end
 
-function ParticleEffect3DConfigurable:GetAlphaFunction()
+function Particle3D:GetAlphaFunction()
 	return self.Config.AlphaFunction;
 end
 
-function ParticleEffect3DConfigurable:SetAlphaFunction(name)
+function Particle3D:SetAlphaFunction(name)
 	self.Config.AlphaFunction = name;
 end
 
-function ParticleEffect3DConfigurable:GetStartAlpha()
+function Particle3D:GetStartAlpha()
 	return self.Config.StartAlpha;
 end
 
-function ParticleEffect3DConfigurable:SetStartAlpha(alpha)
+function Particle3D:SetStartAlpha(alpha)
 	self.Config.StartAlpha = alpha;
 end
 
-function ParticleEffect3DConfigurable:GetEndAlpha()
+function Particle3D:GetEndAlpha()
 	return self.Config.EndAlpha;
 end
 
-function ParticleEffect3DConfigurable:SetEndAlpha(alpha)
+function Particle3D:SetEndAlpha(alpha)
 	self.Config.EndAlpha = alpha;
 end
 
-function ParticleEffect3DConfigurable:GetAlphaFunctionMod()
+function Particle3D:GetAlphaFunctionMod()
 	return self.Config.AlphaFunctionMod;
 end
 
-function ParticleEffect3DConfigurable:SetAlphaFunctionMod(mod)
+function Particle3D:SetAlphaFunctionMod(mod)
 	self.Config.AlphaFunctionMod = mod;
 end
 
-function ParticleEffect3DConfigurable:GetScaleFunction()
+function Particle3D:GetScaleFunction()
 	return self.Config.ScaleFunction;
 end
 
-function ParticleEffect3DConfigurable:SetScaleFunction(name)
+function Particle3D:SetScaleFunction(name)
 	self.Config.ScaleFunction = name;
 end
 
-function ParticleEffect3DConfigurable:GetScaleAxis()
+function Particle3D:GetScaleAxis()
 	return self.Config.ScaleAxis;
 end
 
-function ParticleEffect3DConfigurable:SetScaleAxis(axis)
+function Particle3D:SetScaleAxis(axis)
 	self.Config.ScaleAxis = Vector(axis);
 end
 
-function ParticleEffect3DConfigurable:GetStartScale()
+function Particle3D:GetStartScale()
 	return self.Config.StartScale;
 end
 
-function ParticleEffect3DConfigurable:SetStartScale(scale)
+function Particle3D:SetStartScale(scale)
 	self.Config.StartScale = scale;
 end
 
-function ParticleEffect3DConfigurable:GetEndScale()
+function Particle3D:GetEndScale()
 	return self.Config.EndScale;
 end
 
-function ParticleEffect3DConfigurable:SetEndScale(scale)
+function Particle3D:SetEndScale(scale)
 	self.Config.EndScale = scale;
 end
 
-function ParticleEffect3DConfigurable:GetScaleFunctionMod()
+function Particle3D:GetScaleFunctionMod()
 	return self.Config.ScaleFunctionMod;
 end
 
-function ParticleEffect3DConfigurable:SetScaleFunctionMod(moc)
+function Particle3D:SetScaleFunctionMod(moc)
 	self.Config.ScaleFunctionMod = moc;
 end
 
-function ParticleEffect3DConfigurable:SetThinkFunction(func)
+function Particle3D:SetThinkFunction(func)
 	self.ThinkFunction = func;
 end
 
-function ParticleEffect3DConfigurable:Finished()
+function Particle3D:Finished()
 	return CurTime() > self.SpawnTime + self:GetLifeTime() + self.Config.Delay;
 end
 
-function ParticleEffect3DConfigurable:CleanUp()
+function Particle3D:CleanUp()
 	self.Dirty = true;
 	self.ModelCache:Remove();
 end
 
-setmetatable(ParticleEffect3DConfigurable, {__call = ParticleEffect3DConfigurable.New });
+setmetatable(Particle3D, {__call = Particle3D.New });
