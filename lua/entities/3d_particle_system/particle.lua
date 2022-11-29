@@ -225,8 +225,10 @@ function ParticleEffect3D:Draw()
 	local matRender = Matrix();
 	if (self.Config.InheritAngles && !hasParent) then
 		matRender:Rotate(self.System:GetAngles());
+		if (self.Config.Pos != nil) then matRender:Translate(self.Config.Pos); end
 		matRender:Rotate(self.Config.Angles);
 	else
+		if (self.Config.Pos != nil) then matRender:Translate(self.Config.Pos); end
 		matRender:Rotate(self.Config.Angles);
 	end
 
@@ -240,12 +242,8 @@ function ParticleEffect3D:Draw()
 		matRender:Rotate(angle);
 	end
 
-	if (self.Config.Pos != nil) then
-		matRender:Translate(self.Config.Pos);
-	end
-
 	-- Setup parenting;
-	local pos = self:GetPos() - matRender:GetTranslation();
+	local pos = self:GetPos() + matRender:GetTranslation();
 	local angle = matRender:GetAngles();
 	if (hasParent) then
 
