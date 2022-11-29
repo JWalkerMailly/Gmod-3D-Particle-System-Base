@@ -31,7 +31,7 @@ function ParticleEffect3D:New(model, system, config)
 
 			Pos = nil,
 			LocalPos = nil,
-			Angles = Angle(0, 0, 0),
+			Angles = nil,
 
 			Delay = 0,
 			LifeTime = nil,
