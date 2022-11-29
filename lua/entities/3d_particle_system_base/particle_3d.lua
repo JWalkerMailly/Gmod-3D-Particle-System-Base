@@ -250,6 +250,7 @@ function Particle3D:Draw()
 		-- Transform parent world matrix using position. If position is nil,
 		-- we will default to using Vector(0, 0, 0).
 		local matParent = self.System:GetParentWorldTransformMatrix();
+		if (!self.Config.InheritAngles) then matParent:SetAngles(Angle(0, 0, 0)); end
 		matParent:Translate(pos);
 		pos = matParent:GetTranslation();
 
