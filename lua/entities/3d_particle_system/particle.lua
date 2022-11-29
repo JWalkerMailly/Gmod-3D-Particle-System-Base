@@ -210,9 +210,8 @@ function ParticleEffect3D:Draw()
 
 	-- Used for axis scaling.
 	local matScale = Matrix();
-	local initialScale = Vector(1, 1, 1) * self.Config.StartScale;
 	if (self.Config.ScaleAxis != Vector(0, 0, 0)) then
-		matScale:Scale(initialScale + self.Config.ScaleAxis * self.Scale);
+		matScale:Scale(self.Config.ScaleAxis * self.Scale);
 	else
 		matScale:Scale(Vector(1, 1, 1) * self.Scale);
 	end
