@@ -2,110 +2,93 @@
 ParticleEffect3D = {};
 ParticleEffect3D.__index = ParticleEffect3D;
 
-function ParticleEffect3D:New(model, system, config)
+function ParticleEffect3D:New(model, system)
 
-	-- Setup base object.
-	local object = {};
-	object.Dirty = false;
-	object.System = system;
-	object.SpawnTime = CurTime();
-	object.ThinkFunction = nil;
+	local object = {
 
-	-- Setup base properties.
-	object.Color = Color(255, 255, 255);
-	object.Alpha = 255;
-	object.Scale = 1;
-	object.AxisScale = Vector(1, 1, 1);
-	object.Rotation = 0;
-	object.Angle = Angle(0, 0, 0);
+		System = system,
 
-	-- Setup default configuration.
-	if (config != nil) then
-		object.Config = config;
-	else
-		object.Config = {
+		Model = model,
+		ModelCache = ClientsideModel(model),
+		Skin = nil,
+		BodyGroups = nil,
+		Material = nil,
+		Dirty = false,
 
-			Model = model,
-			Skin = nil,
-			BodyGroups = nil,
-			Material = nil,
+		Color = Color(255, 255, 255),
+		Alpha = 255,
+		Scale = 1,
+		Rotation = 0,
+		Looping = false,
 
-			Pos = nil,
-			Angles = Angle(0, 0, 0),
-			InheritAngles = false,
+		Pos = Vector(0, 0, 0),
+		Angles = Angle(0, 0, 0),
 
-			Delay = 0,
-			LifeTime = nil,
-			Looping = false,
+		SpawnTime = CurTime(),
+		Delay = 0,
+		LifeTime = nil,
 
-			RotationFunction = math.sin,
-			RotationNormal = Vector(0, 0, 0),
-			ConstantRotation = false,
-			StartRotation = 0,
-			EndRotation = nil,
-			RotationFunctionMod = 0,
+		RotationFunction = math.sin,
+		RotationNormal = Vector(0, 0, 0),
+		RotateAroundNormal = false,
+		StartRotation = 0,
+		EndRotation = nil,
+		RotationFunctionMod = 0,
 
-			ColorFunction = math.sin,
-			StartColor = Color(0, 0, 0),
-			EndColor = nil,
-			ColorFunctionMod = 0,
+		ColorFunction = math.sin,
+		StartColor = Color(0, 0, 0),
+		EndColor = nil,
+		ColorFunctionMod = 0,
 
-			AlphaFunction = math.sin,
-			StartAlpha = 0,
-			EndAlpha = nil,
-			AlphaFunctionMod = 0,
+		AlphaFunction = math.sin,
+		StartAlpha = 0,
+		EndAlpha = nil,
+		AlphaFunctionMod = 0,
 
-			ScaleFunction = math.sin,
-			StartScale = 0,
-			EndScale = nil,
-			ScaleFunctionMod = 0,
+		ScaleFunction = math.sin,
+		ScaleAxis = Vector(0, 0, 0),
+		StartScale = 0,
+		EndScale = nil,
+		ScaleFunctionMod = 0,
 
-			AxisScaleFunction = math.sin,
-			StartAxisScale = Vector(1, 1, 1),
-			EndAxisScale = nil,
-			AxisScaleFunctionMod = 0
-		};
-	end
+		ThinkFunction = nil
+	};
 
-	-- Prepare model for particle rendering.
-	util.PrecacheModel(object.Config.Model);
-	object.ModelCache = ClientsideModel(object.Config.Model);
 	object.ModelCache:SetNoDraw(true);
-
-	-- Create object from metadata.
+	util.PrecacheModel(model);
 	setmetatable(object, ParticleEffect3D);
 	system:Add(object);
 	return object;
 end
 
 function ParticleEffect3D:GetModel()
-	return self.Config.Model;
+	return self.Model;
 end
 
 function ParticleEffect3D:GetSkin()
-	return self.Config.Skin;
+	return self.Skin;
 end
 
 function ParticleEffect3D:SetSkin(skin)
-	self.Config.Skin = skin;
+	self.Skin = skin;
 	self.ModelCache:SetSkin(skin);
 end
 
 function ParticleEffect3D:GetBodyGroups()
-	return self.Config.BodyGroups;
+	return self.BodyGroups;
 end
 
 function ParticleEffect3D:SetBodyGroups(bodyGroups)
-	self.Config.BodyGroups = bodyGroups;
+	self.BodyGroups = bodyGroups;
 	self.ModelCache:SetBodyGroups(bodyGroups);
 end
 
 function ParticleEffect3D:GetMaterial()
-	return self.Config.Material;
+	return self.Material;
 end
 
 function ParticleEffect3D:SetMaterial(texture)
-	self.Config.Material = Material(texture);
+	self.Material = Material(texture);
 end
 
 function ParticleEffect3D:LerpColor(t, from, to)
@@ -124,7 +107,7 @@ function ParticleEffect3D:Draw()
 	end
 
 	-- Particle is finished, reset spawn time.
-	if (self.Config.Looping && self:Finished()) then
+	if (self.Looping && self:Finished()) then
 		self.SpawnTime = CurTime();
 	end
 
@@ -139,7 +122,7 @@ function ParticleEffect3D:Draw()
 		self.FrameTime = CurTime();
 	end
 
-	local delay = self.Config.Delay;
+	local delay = self.Delay;
 	local delta = math.Clamp((CurTime() - (self.SpawnTime + delay)) / self:GetLifeTime(), 0, 1);
 	local frametime = CurTime() - self.FrameTime;
 
@@ -154,123 +137,98 @@ function ParticleEffect3D:Draw()
 	end
 
 	-- Setup color.
-	if (self.Config.StartColor != nil) then
-		self.Color = self.Config.StartColor;
+	if (self.StartColor != nil) then
+		self.Color = self.StartColor;
 	end
 
 	-- Setup alpha.
-	if (self.Config.StartAlpha != nil) then
-		self.Alpha = self.Config.StartAlpha;
+	if (self.StartAlpha != nil) then
+		self.Alpha = self.StartAlpha;
 	end
 
 	-- Setup scale.
-	if (self.Config.StartScale != nil) then
-		self.Scale = self.Config.StartScale;
-	end
-
-	-- Setup axis scale.
-	if (self.Config.StartAxisScale != nil) then
-		self.AxisScale = self.Config.StartAxisScale;
+	if (self.StartScale != nil) then
+		self.Scale = self.StartScale;
 	end
 
 	-- Setup roll.
-	if (self.Config.StartRotation != nil) then
-		self.Rotation = self.Config.StartRotation;
+	if (self.StartRotation != nil) then
+		self.Rotation = self.StartRotation;
 	end
 
 	-- Patricle effect color parameters.
-	if (self.Config.EndColor != nil) then
+	if (self.EndColor != nil) then
 		self.Color = self:LerpColor(
-			self.Config.ColorFunction(delta * self.Config.ColorFunctionMod),
-			self.Config.StartColor,
-			self.Config.EndColor);
+			self.ColorFunction(delta * self.ColorFunctionMod),
+			self.StartColor,
+			self.EndColor);
 	end
 
 	-- Particle effect alpha parameters.
-	if (self.Config.EndAlpha != nil) then
+	if (self.EndAlpha != nil) then
 		self.Alpha = Lerp(
-			self.Config.AlphaFunction(delta * self.Config.AlphaFunctionMod),
-			self.Config.StartAlpha,
-			self.Config.EndAlpha);
+			self.AlphaFunction(delta * self.AlphaFunctionMod),
+			self.StartAlpha,
+			self.EndAlpha);
 	end
 
 	-- Particle effect size parameters.
-	if (self.Config.EndScale != nil) then
+	if (self.EndScale != nil) then
 		self.Scale = Lerp(
-			self.Config.ScaleFunction(delta * self.Config.ScaleFunctionMod),
-			self.Config.StartScale,
-			self.Config.EndScale);
-	end
-
-	-- Particle effect axis size parameters.
-	if (self.Config.EndAxisScale != nil) then
-		self.AxisScale = LerpVector(
-			self.Config.AxisScaleFunction(delta * self.Config.AxisScaleFunctionMod),
-			self.Config.StartAxisScale,
-			self.Config.EndAxisScale);
+			self.ScaleFunction(delta * self.ScaleFunctionMod),
+			self.StartScale,
+			self.EndScale);
 	end
 
 	-- Particle effect rotation parameters.
-	if (self.Config.EndRotation != nil) then
+	if (self.EndRotation != nil) then
 		self.Rotation = Lerp(
-			self.Config.RotationFunction(delta * self.Config.RotationFunctionMod),
-			self.Config.StartRotation,
-			self.Config.EndRotation);
+			self.RotationFunction(delta * self.RotationFunctionMod),
+			self.StartRotation,
+			self.EndRotation);
 	end
 
-	local parent = self.System:GetParent();
-	local hasParent = parent != NULL && parent != nil && parent:IsValid();
-
-	-- Setup angles matrix.
-	local matRender = Matrix();
-	if (self.Config.InheritAngles && !hasParent) then
-		matRender:Rotate(self.System:GetAngles());
-		if (self.Config.Pos != nil) then matRender:Translate(self.Config.Pos); end
-		matRender:Rotate(self.Config.Angles);
+	-- Compute rotation based on the desired behavior.
+	local angles = self.Angles;
+	if (self.RotateAroundNormal) then
+		angles:RotateAroundAxis(self.RotationNormal, (self.EndRotation || 0) * frametime);
 	else
-		if (self.Config.Pos != nil) then matRender:Translate(self.Config.Pos); end
-		matRender:Rotate(self.Config.Angles);
+		local normal = self.RotationNormal;
+		angles = Angle(normal[1], normal[2], normal[3]) * self.Rotation;
 	end
 
-	-- Apply rotation.
-	if (self.Config.ConstantRotation) then
-		self.Angle:RotateAroundAxis(self.Config.RotationNormal, (self.Config.EndRotation || 0) * frametime);
-		matRender:Rotate(self.Angle);
+	-- Used for axis scaling.
+	local matScale = Matrix();
+	local initialScale = Vector(1, 1, 1) * self.StartScale;
+	if (self.ScaleAxis != Vector(0, 0, 0)) then
+		matScale:Scale(initialScale + self.ScaleAxis * self.Scale);
 	else
-		local angle = Angle(0, 0, 0);
-		angle:RotateAroundAxis(self.Config.RotationNormal, self.Rotation);
-		matRender:Rotate(angle);
+		matScale:Scale(Vector(1, 1, 1) * self.Scale);
 	end
 
-	-- Setup parenting;
-	local pos = self:GetPos() + matRender:GetTranslation();
-	local angle = matRender:GetAngles();
-	if (hasParent) then
+	-- Handle parenting;
+	local renderingPos 		= self.Pos;
+	local renderingAngles 	= angles;
+	local parent 			= self.System:GetParent();
+	if (parent != NULL && parent != nil && parent:IsValid()) then
 
-		-- Transform parent world matrix using position. If position is nil,
-		-- we will default to using Vector(0, 0, 0).
-		local matParent = self.System:GetParentWorldTransformMatrix();
-		matParent:Translate(pos);
-		pos = matParent:GetTranslation();
-
-		-- Determine if we should apply parent angles to system.
-		if (self.Config.InheritAngles) then
-			matParent:Rotate(angle);
-			angle = matParent:GetAngles();
-		end
+		-- Transform parent world matrix using position and angle data as local transforms.
+		local parentMatrix = self.System:GetParentWorldTransformMatrix();
+		parentMatrix:Translate(renderingPos);
+		parentMatrix:Rotate(renderingAngles);
+		renderingPos = parentMatrix:GetTranslation();
+		renderingAngles = parentMatrix:GetAngles();
 	end
 
 	-- Render 3D effect using our model cache.
-	local matScale = Matrix();
-	matScale:Scale(self.AxisScale * self.Scale);
 	render.SetBlend(self.Alpha / 255);
 	render.SetColorModulation(self.Color.r / 255, self.Color.g / 255, self.Color.b / 255)
 	self.ModelCache:EnableMatrix("RenderMultiply", matScale);
-	render.MaterialOverride(self.Config.Material);
+	render.MaterialOverride(self.Material);
 	render.Model({
-		model = self.Config.Model,
-		pos = pos,
-		angle = angle
+		model = self.Model,
+		pos = renderingPos,
+		angle = renderingAngles
 	}, self.ModelCache);
 	render.MaterialOverride(nil);
 	render.SetColorModulation(1, 1, 1);
@@ -279,47 +237,27 @@ function ParticleEffect3D:Draw()
 end
 
 function ParticleEffect3D:GetLooping()
-	return self.Config.Looping;
+	return self.Looping;
 end
 
 function ParticleEffect3D:SetLooping(loop)
-	self.Config.Looping = loop;
+	self.Looping = loop;
 end
 
 function ParticleEffect3D:GetPos()
-
-	local parent = self.System:GetParent();
-	local hasParent = (parent != NULL && parent != nil && parent:IsValid());
-
-	-- Has parent, position will automatically be translated from parent attachment world matrix in draw operation.
-	if (self.Config.Pos == nil && hasParent) then
-		return Vector(0, 0, 0);
-	end
-
-	-- No parent, return system's position for proper rendering.
-	if (self.Config.Pos == nil && !hasParent) then
-		return self.System:GetPos();
-	end
-
-	-- Defined position with parent, return position to be used as a local position (relative to parent).
-	if (self.Config.Pos != nil && hasParent) then
-		return self.Config.Pos;
-	end
-
-	-- No parent but position supplied, use position relative to system.
-	return self.System:GetPos();
+	return self.Pos;
 end
 
 function ParticleEffect3D:SetPos(pos)
-	self.Config.Pos = Vector(pos);
+	self.Pos = Vector(pos);
 end
 
 function ParticleEffect3D:GetAngles()
-	return self.Config.Angles;
+	return self.Angles;
 end
 
 function ParticleEffect3D:SetAngles(ang)
-	self.Config.Angles = Angle(ang);
+	self.Angles = Angle(ang);
 end
 
 function ParticleEffect3D:GetSpawnTime()
@@ -331,177 +269,177 @@ function ParticleEffect3D:SetSpawnTime(time)
 end
 
 function ParticleEffect3D:GetDelay()
-	return self.Config.Delay;
+	return self.Delay;
 end
 
 function ParticleEffect3D:SetDelay(time)
-	self.Config.Delay = time;
+	self.Delay = time;
 end
 
 function ParticleEffect3D:GetLifeTime()
 
-	if (self.Config.LifeTime == nil) then
+	if (self.LifeTime == nil) then
 		local systemLifeTime = self.System:GetLifeTime();
 		return math.Clamp(systemLifeTime - self.Delay, FrameTime(), systemLifeTime);
 	end
 
-	return self.Config.LifeTime;
+	return self.LifeTime;
 end
 
 function ParticleEffect3D:SetLifeTime(time)
-	self.Config.LifeTime = time;
+	self.LifeTime = time;
 end
 
 function ParticleEffect3D:GetRotationFunction()
-	return self.Config.RotationFunction;
+	return self.RotationFunction;
 end
 
 function ParticleEffect3D:SetRotationFunction(name)
-	self.Config.RotationFunction = name;
+	self.RotationFunction = name;
 end
 
 function ParticleEffect3D:GetRotationNormal()
-	return self.Config.RotationNormal;
+	return self.RotationNormal;
 end
 
 function ParticleEffect3D:SetRotationNormal(normal)
-	self.Config.RotationNormal = Vector(normal);
+	self.RotationNormal = Vector(normal);
 end
 
-function ParticleEffect3D:ConstantRotation()
-	return self.Config.ConstantRotation;
+function ParticleEffect3D:GetRotateAroundNormal()
+	return self.RotateAroundNormal;
 end
 
-function ParticleEffect3D:ConstantRotation(constant)
-	self.Config.ConstantRotation = constant;
+function ParticleEffect3D:SetRotateAroundNormal(rotate)
+	self.RotateAroundNormal = rotate;
 end
 
 function ParticleEffect3D:GetStartRotation()
-	return self.Config.StartRotation;
+	return self.StartRotation;
 end
 
 function ParticleEffect3D:SetStartRotation(rotation)
-	self.Config.StartRotation = rotation;
+	self.StartRotation = rotation;
 end
 
 function ParticleEffect3D:GetEndRotation()
-	return self.Config.EndRotation;
+	return self.EndRotation;
 end
 
 function ParticleEffect3D:SetEndRotation(rotation)
-	self.Config.EndRotation = rotation;
+	self.EndRotation = rotation;
 end
 
 function ParticleEffect3D:GetRotationFunctionMod()
-	return self.Config.RotationFunctionMod;
+	return self.RotationFunctionMod;
 end
 
 function ParticleEffect3D:SetRotationFunctionMod(mod)
-	self.Config.RotationFunctionMod = mod;
+	self.RotationFunctionMod = mod;
 end
 
 function ParticleEffect3D:GetColorFunction()
-	return self.Config.ColorFunction;
+	return self.ColorFunction;
 end
 
 function ParticleEffect3D:SetColorFunction(name)
-	self.Config.ColorFunction = name;
+	self.ColorFunction = name;
 end
 
 function ParticleEffect3D:GetStartColor()
-	return self.Config.StartColor;
+	return self.StartColor;
 end
 
 function ParticleEffect3D:SetStartColor(col)
-	self.Config.StartColor = Color(col.r, col.g, col.b);
+	self.StartColor = Color(col.r, col.g, col.b);
 end
 
 function ParticleEffect3D:GetEndColor()
-	return self.Config.EndColor;
+	return self.EndColor;
 end
 
 function ParticleEffect3D:SetEndColor(col)
-	self.Config.EndColor = Color(col.r, col.g, col.b);
+	self.EndColor = Color(col.r, col.g, col.b);
 end
 
 function ParticleEffect3D:GetColorFunctionMod()
-	return self.Config.ColorFunctionMod;
+	return self.ColorFunctionMod;
 end
 
 function ParticleEffect3D:SetColorFunctionMod(mod)
-	self.Config.ColorFunctionMod = mod;
+	self.ColorFunctionMod = mod;
 end
 
 function ParticleEffect3D:GetAlphaFunction()
-	return self.Config.AlphaFunction;
+	return self.AlphaFunction;
 end
 
 function ParticleEffect3D:SetAlphaFunction(name)
-	self.Config.AlphaFunction = name;
+	self.AlphaFunction = name;
 end
 
 function ParticleEffect3D:GetStartAlpha()
-	return self.Config.StartAlpha;
+	return self.StartAlpha;
 end
 
 function ParticleEffect3D:SetStartAlpha(alpha)
-	self.Config.StartAlpha = alpha;
+	self.StartAlpha = alpha;
 end
 
 function ParticleEffect3D:GetEndAlpha()
-	return self.Config.EndAlpha;
+	return self.EndAlpha;
 end
 
 function ParticleEffect3D:SetEndAlpha(alpha)
-	self.Config.EndAlpha = alpha;
+	self.EndAlpha = alpha;
 end
 
 function ParticleEffect3D:GetAlphaFunctionMod()
-	return self.Config.AlphaFunctionMod;
+	return self.AlphaFunctionMod;
 end
 
 function ParticleEffect3D:SetAlphaFunctionMod(mod)
-	self.Config.AlphaFunctionMod = mod;
+	self.AlphaFunctionMod = mod;
 end
 
 function ParticleEffect3D:GetScaleFunction()
-	return self.Config.ScaleFunction;
+	return self.ScaleFunction;
 end
 
 function ParticleEffect3D:SetScaleFunction(name)
-	self.Config.ScaleFunction = name;
+	self.ScaleFunction = name;
 end
 
 function ParticleEffect3D:GetScaleAxis()
-	return self.Config.ScaleAxis;
+	return self.ScaleAxis;
 end
 
 function ParticleEffect3D:SetScaleAxis(axis)
-	self.Config.ScaleAxis = Vector(axis);
+	self.ScaleAxis = Vector(axis);
 end
 
 function ParticleEffect3D:GetStartScale()
-	return self.Config.StartScale;
+	return self.StartScale;
 end
 
 function ParticleEffect3D:SetStartScale(scale)
-	self.Config.StartScale = scale;
+	self.StartScale = scale;
 end
 
 function ParticleEffect3D:GetEndScale()
-	return self.Config.EndScale;
+	return self.EndScale;
 end
 
 function ParticleEffect3D:SetEndScale(scale)
-	self.Config.EndScale = scale;
+	self.EndScale = scale;
 end
 
 function ParticleEffect3D:GetScaleFunctionMod()
-	return self.Config.ScaleFunctionMod;
+	return self.ScaleFunctionMod;
 end
 
 function ParticleEffect3D:SetScaleFunctionMod(moc)
-	self.Config.ScaleFunctionMod = moc;
+	self.ScaleFunctionMod = moc;
 end
 
 function ParticleEffect3D:SetThinkFunction(func)
@@ -509,7 +447,7 @@ function ParticleEffect3D:SetThinkFunction(func)
 end
 
 function ParticleEffect3D:Finished()
-	return CurTime() > self.SpawnTime + self:GetLifeTime() + self.Config.Delay;
+	return CurTime() > self.SpawnTime + self:GetLifeTime() + self.Delay;
 end
 
 function ParticleEffect3D:CleanUp()
