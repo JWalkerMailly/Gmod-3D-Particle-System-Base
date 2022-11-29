@@ -17,6 +17,7 @@ function ParticleEffect3D:New(model, system, config)
 	object.Scale = 1;
 	object.AxisScale = Vector(1, 1, 1);
 	object.Rotation = 0;
+	object.Angle = Angle(0, 0, 0);
 
 	-- Setup default configuration.
 	if (config != nil) then
@@ -30,8 +31,8 @@ function ParticleEffect3D:New(model, system, config)
 			Material = nil,
 
 			Pos = nil,
-			LocalPos = nil,
-			Angles = nil,
+			Angles = Angle(0, 0, 0),
+			InheritAngles = false,
 
 			Delay = 0,
 			LifeTime = nil,
@@ -39,7 +40,7 @@ function ParticleEffect3D:New(model, system, config)
 
 			RotationFunction = math.sin,
 			RotationNormal = Vector(0, 0, 0),
-			RotateAroundNormal = false,
+			ConstantRotation = false,
 			StartRotation = 0,
 			EndRotation = nil,
 			RotationFunctionMod = 0,
@@ -217,42 +218,61 @@ function ParticleEffect3D:Draw()
 			self.Config.EndRotation);
 	end
 
-	-- Compute rotation based on the desired behavior.
-	local angles = self:GetAngles();
-	if (self.Config.RotateAroundNormal) then
-		angles:RotateAroundAxis(self.Config.RotationNormal, (self.Config.EndRotation || 0) * frametime);
+	local parent = self.System:GetParent();
+	local hasParent = parent != NULL && parent != nil && parent:IsValid();
+
+	-- Setup angles matrix.
+	local matRender = Matrix();
+	if (self.Config.InheritAngles && !hasParent) then
+		matRender:Rotate(self.System:GetAngles());
+		matRender:Rotate(self.Config.Angles);
 	else
-		local normal = self.Config.RotationNormal;
-		angles = Angle(normal[1], normal[2], normal[3]) * self.Rotation;
+		matRender:Rotate(self.Config.Angles);
 	end
 
-	-- Used for axis scaling.
-	local matScale = Matrix();
-	matScale:Scale(self.AxisScale * self.Scale);
+	-- Apply rotation.
+	if (self.Config.ConstantRotation) then
+		self.Angle:RotateAroundAxis(self.Config.RotationNormal, (self.Config.EndRotation || 0) * frametime);
+		matRender:Rotate(self.Angle);
+	else
+		local angle = Angle(0, 0, 0);
+		angle:RotateAroundAxis(self.Config.RotationNormal, self.Rotation);
+		matRender:Rotate(angle);
+	end
 
-	-- Handle parenting;
-	local parent = self.System:GetParent();
-	local renderingPos = self:GetPos() + self:GetLocalPos();
-	local renderingAngles = angles;
-	if (parent != NULL && parent != nil && parent:IsValid()) then
+	if (self.Config.Pos != nil) then
+		matRender:Translate(self.Config.Pos);
+	end
 
-		-- Transform parent world matrix using position and angle data as local transforms.
-		local parentMatrix = self.System:GetParentWorldTransformMatrix();
-		parentMatrix:Translate(renderingPos);
-		parentMatrix:Rotate(renderingAngles);
-		renderingPos = parentMatrix:GetTranslation();
-		renderingAngles = parentMatrix:GetAngles();
+	-- Setup parenting;
+	local pos = self:GetPos() - matRender:GetTranslation();
+	local angle = matRender:GetAngles();
+	if (hasParent) then
+
+		-- Transform parent world matrix using position. If position is nil,
+		-- we will default to using Vector(0, 0, 0).
+		local matParent = self.System:GetParentWorldTransformMatrix();
+		matParent:Translate(pos);
+		pos = matParent:GetTranslation();
+
+		-- Determine if we should apply parent angles to system.
+		if (self.Config.InheritAngles) then
+			matParent:Rotate(angle);
+			angle = matParent:GetAngles();
+		end
 	end
 
 	-- Render 3D effect using our model cache.
+	local matScale = Matrix();
+	matScale:Scale(self.AxisScale * self.Scale);
 	render.SetBlend(self.Alpha / 255);
 	render.SetColorModulation(self.Color.r / 255, self.Color.g / 255, self.Color.b / 255)
 	self.ModelCache:EnableMatrix("RenderMultiply", matScale);
 	render.MaterialOverride(self.Config.Material);
 	render.Model({
 		model = self.Config.Model,
-		pos = renderingPos,
-		angle = renderingAngles
+		pos = pos,
+		angle = angle
 	}, self.ModelCache);
 	render.MaterialOverride(nil);
 	render.SetColorModulation(1, 1, 1);
@@ -270,44 +290,33 @@ end
 
 function ParticleEffect3D:GetPos()
 
-	if (self.Config.Pos == nil) then
+	local parent = self.System:GetParent();
+	local hasParent = (parent != NULL && parent != nil && parent:IsValid());
 
-		-- No position and no parent supplied, return the system's position for rendering.
-		local parent = self.System:GetParent();
-		if (parent == NULL || parent == nil || !parent:IsValid()) then
-			return self.System:GetPos();
-		end
-
-		-- No position supplied, parent must be supplied, return local origin.
+	-- Has parent, position will automatically be translated from parent attachment world matrix in draw operation.
+	if (self.Config.Pos == nil && hasParent) then
 		return Vector(0, 0, 0);
 	end
 
-	return self.Config.Pos;
+	-- No parent, return system's position for proper rendering.
+	if (self.Config.Pos == nil && !hasParent) then
+		return self.System:GetPos();
+	end
+
+	-- Defined position with parent, return position to be used as a local position (relative to parent).
+	if (self.Config.Pos != nil && hasParent) then
+		return self.Config.Pos;
+	end
+
+	-- No parent but position supplied, use position relative to system.
+	return self.System:GetPos();
 end
 
 function ParticleEffect3D:SetPos(pos)
 	self.Config.Pos = Vector(pos);
 end
 
-function ParticleEffect3D:GetLocalPos()
-
-	if (self.Config.LocalPos == nil) then
-		return Vector(0, 0, 0);
-	end
-
-	return self.Config.LocalPos;
-end
-
-function ParticleEffect3D:SetLocalPos(pos)
-	self.Config.LocalPos = Vector(pos);
-end
-
 function ParticleEffect3D:GetAngles()
-
-	if (self.Config.Angles == nil) then
-		return self.System:GetAngles();
-	end
-
 	return self.Config.Angles;
 end
 
@@ -361,12 +370,12 @@ function ParticleEffect3D:SetRotationNormal(normal)
 	self.Config.RotationNormal = Vector(normal);
 end
 
-function ParticleEffect3D:GetRotateAroundNormal()
-	return self.Config.RotateAroundNormal;
+function ParticleEffect3D:ConstantRotation()
+	return self.Config.ConstantRotation;
 end
 
-function ParticleEffect3D:SetRotateAroundNormal(rotate)
-	self.Config.RotateAroundNormal = rotate;
+function ParticleEffect3D:ConstantRotation(constant)
+	self.Config.ConstantRotation = constant;
 end
 
 function ParticleEffect3D:GetStartRotation()
