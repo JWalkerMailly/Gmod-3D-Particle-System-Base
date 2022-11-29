@@ -7,7 +7,7 @@ function game.Add3DParticles(particleFile, path)
 
 	if (particleFile != nil && particleFile != "" && string.match(particleFile, ".json") != nil) then
 
-		-- Use the supplied config path, else default to data.
+		-- Use the supplied config path, else default to game.
 		-- This is useful for particle systems that ship with addons but use
 		-- the new configuration feature from the particle editor.
 		if (path == nil || path == "") then path = "GAME"; end

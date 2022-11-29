@@ -1,4 +1,5 @@
 
+-- This behaves like a static class.
 GLOBALS_3D_PARTICLE_PARSER = {};
 
 -- This is only used internally by the configuration module. Configs
