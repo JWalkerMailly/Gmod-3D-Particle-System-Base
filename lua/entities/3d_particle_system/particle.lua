@@ -60,8 +60,8 @@ function ParticleEffect3D:New(model, system, config)
 			ScaleFunctionMod = 0,
 
 			AxisScaleFunction = math.sin,
-			StartAxisScale = Vector(0, 0, 0),
-			EndAxisScale = Vector(0, 0, 0),
+			StartAxisScale = Vector(1, 1, 1),
+			EndAxisScale = nil,
 			AxisScaleFunctionMod = 0
 		};
 	end
