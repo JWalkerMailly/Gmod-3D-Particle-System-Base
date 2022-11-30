@@ -113,7 +113,7 @@ function Particle3D:LerpColor(t, from, to)
 		Lerp(t, from.r, to.r),
 		Lerp(t, from.g, to.g),
 		Lerp(t, from.b, to.b),
-		Lerp(t, from.a || 0, to.a || 0)
+		Lerp(t, from.a || 255, to.a || 255)
 	);
 end
 
