@@ -63,7 +63,7 @@ end
 
 -- Used to parse colors.
 function GLOBALS_3D_PARTICLE_PARSER:ToVectorColor(data)
-	return "{\"r\":" .. data.r .. ",\"g\":" .. data.g .. ",\"b\":" .. data.b .. ",\"a\":255}";
+	return "{\"r\":" .. data.r .. ",\"g\":" .. data.g .. ",\"b\":" .. data.b .. "}";
 end
 
 function GLOBALS_3D_PARTICLE_PARSER:DeserializeParticlesToSource(data)
