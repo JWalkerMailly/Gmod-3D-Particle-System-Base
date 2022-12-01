@@ -5,7 +5,7 @@ game.__3DParticleCache = {};
 -- This must be called from the shared realm in order to send resources to clients.
 function game.Add3DParticles(particleFile, path)
 
-	if (particleFile != nil && particleFile != "" && string.match(particleFile, ".json") != nil) then
+	if (particleFile != nil && particleFile != "" && string.match(particleFile, ".lua") != nil) then
 
 		-- Use the supplied config path, else default to game.
 		-- This is useful for particle systems that ship with addons but use
@@ -24,7 +24,7 @@ function game.Add3DParticles(particleFile, path)
 		-- Parse config file into cache.
 		local data = file.Read(particleFile, path)
 		if (CLIENT) then
-			game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".json", "")] = GLOBALS_3D_PARTICLE_PARSER:ParseConfiguration(data);
+			game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".lua", "")] = GLOBALS_3D_PARTICLE_PARSER:ParseConfiguration(data);
 		end
 	end
 end
