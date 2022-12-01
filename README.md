@@ -1,7 +1,8 @@
 # 3D Particle System Base
 
 ### Description
-Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity.
+Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity. Workshop:
+https://steamcommunity.com/sharedfiles/filedetails/?id=2890316061
 
 ### How to use
 The prefered method of creating a particle system is to use the 3D Particle System Editor addon in conjunction with this base. Please see the following link for more information:
