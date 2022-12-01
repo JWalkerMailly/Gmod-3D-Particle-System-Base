@@ -1,16 +1,13 @@
 # 3D Particle System Base
 
-## Major Update - Please read
-A new addon was recently released to aid developers in creating particle effects. The old base (3d_particle_system) has now been superseded by '3d_particle_system_base'. The new system instroduces a more robust rendering logic utilizing matrices. Please refer to the following github for more information:
-https://github.com/JWalkerMailly/Gmod-3D-Particle-System-Editor
-
-## The information that follows is outdated and will be updated to promote the new system
-
 ### Description
 Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity.
 
-### Setup
-Test systems are included as reference, they can be found in *lua/entities/*. Each particle system is its own entity. Here is how to create a system from scratch:
+### How to use
+The prefered method of creating a particle system is to use the 3D Particle System Editor addon in conjunction with this base. Please see the following link for more information:
+https://github.com/JWalkerMailly/Gmod-3D-Particle-System-Editor
+
+Nevertheless, if you seek a minor performance increase, the prefered method would be to create your particle system from scratch using the provided base. Inside this project, you will find two bases to derive from; *3d_particle_system* (deprecated) and *3d_particle_system_base* (prefered). Please note that any particle system created manually **cannot be edited with the particle editor addon (yet)**.
 
 #### Folder Structure
 In your addons folder, create an *entities* folder in *lua* if not already present. In entities, add a folder for your particle system:
@@ -26,7 +23,7 @@ if (SERVER) then
 	AddCSLuaFile("cl_init.lua");
 end
 
-DEFINE_BASECLASS("3d_particle_system");
+DEFINE_BASECLASS("3d_particle_system_base");
 
 ENT.RenderGroup 	= RENDERGROUP_BOTH;
 ENT.LifeTime 		= 0; -- NOTE: This variable is important, it represents the lifetime of your system. It should be longer than any of the particles you will be adding in InitializeParticles. You must take into account Delay.
@@ -124,7 +121,7 @@ Here is a list of all available properties for animating a particle effect. Plea
 | RotationFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's rotation. Example: "math.sin". |
 | RotationNormal | Vector | *Optional*: Specifies the "up" direction for the effect. This is used to influence the way the final result will rotate. |
 | StartRotation | Float | *Optional*: Starting rotation in degrees. |
-| RotateAroundNormal | Bool | *Optional*: Set to true to make the particle effect spin around its "up" axis. If this is used in conjunction with RotationNormal, make sure that you initially use SetAngles on your particle effect to orient it towards your RotationNormal. |
+| ConstantRotation | Bool | *Optional*: Set to true to make the particle effect spin around its "up" axis. If this is used in conjunction with RotationNormal, make sure that you initially use SetAngles on your particle effect to orient it towards your RotationNormal. |
 | EndRotation | Float | *Optional*: Target rotation in degrees. |
 | RotationFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the rotation. |
 | ColorFunction | Function | *Optional*: The function to be used on the animation delta for interpolating the effect's color. Example: "math.sin". |
