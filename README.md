@@ -1,5 +1,11 @@
 # 3D Particle System Base
 
+## Major Update - Please read
+A new addon was recently released to aid developers in creating particle effects. The old base (3d_particle_system) has now been superseded by '3d_particle_system_base'. The new system instroduces a more robust rendering logic utilizing matrices. Please refer to the following github for more information:
+https://github.com/JWalkerMailly/Gmod-3D-Particle-System-Editor
+
+## The information that follows is outdated and will be updated to promote the new system
+
 ### Description
 Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity.
 
