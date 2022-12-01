@@ -36,7 +36,18 @@ end
 -- Helper function to create 3D particle systems like PCFs when using config files.
 ParticleSystem3D = function(particleName, position, angles, lifetime, parent, attach)
 
-	local effect = ents.Create("3d_particle_system_base");
+	local effect = nil;
+
+	if (SERVER) then
+		effect = ents.Create("3d_particle_system_base");
+	end
+
+	if (CLIENT) then
+		effect = ents.CreateClientside("3d_particle_system_base");
+	end
+
+	if (effect == nil) then return; end
+
 	effect:SetPos(position);
 	effect:SetAngles(angles);
 	effect:SetLifeTime(lifetime);
