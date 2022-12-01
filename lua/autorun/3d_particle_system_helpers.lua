@@ -11,20 +11,24 @@ function game.Add3DParticles(particleFile, path)
 		-- This is useful for particle systems that ship with addons but use
 		-- the new configuration feature from the particle editor.
 		if (path == nil || path == "") then path = "LUA"; end
-		local configExists = file.Exists(particleFile, path);
-		if (!configExists) then
-			ErrorNoHalt("Could not find 3D Particle configuration file: " .. particleFile .. ".\n");
-			return;
-		end
 
 		if (SERVER) then
-			resource.AddFile(particleFile);
+			local configExists = file.Exists(particleFile, path);
+			if (!configExists) then
+				ErrorNoHalt("Could not find 3D Particle configuration file: " .. particleFile .. ".\n");
+				return;
+			end
+			resource.AddFile("lua/" .. particleFile);
 		end
 
 		-- Parse config file into cache.
 		local data = file.Read(particleFile, path)
 		if (CLIENT) then
-			game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".lua", "")] = GLOBALS_3D_PARTICLE_PARSER:ParseConfiguration(data);
+			if (data != nil && data != "") then
+				game.__3DParticleCache[string.Replace(string.match(particleFile, "[^/]+$"), ".lua", "")] = GLOBALS_3D_PARTICLE_PARSER:ParseConfiguration(data);
+			else
+				ErrorNoHalt("Could not cache 3D Particle configuration file: " .. particleFile .. ".\n");
+			end
 		end
 	end
 end
