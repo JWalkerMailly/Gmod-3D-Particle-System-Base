@@ -10,7 +10,7 @@ function game.Add3DParticles(particleFile, path)
 		-- Use the supplied config path, else default to game.
 		-- This is useful for particle systems that ship with addons but use
 		-- the new configuration feature from the particle editor.
-		if (path == nil || path == "") then path = "GAME"; end
+		if (path == nil || path == "") then path = "LUA"; end
 		local configExists = file.Exists(particleFile, path);
 		if (!configExists) then
 			ErrorNoHalt("Could not find 3D Particle configuration file: " .. particleFile .. ".\n");
