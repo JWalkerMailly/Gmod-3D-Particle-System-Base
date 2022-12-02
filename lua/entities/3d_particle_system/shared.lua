@@ -83,6 +83,8 @@ function PARTICLE:Destroy()
 		-- Theory: To prevent client side models from not being garbage collected,
 		-- we set a 1 second delay + the server's tickrate. This should prevent
 		-- desync during lag and be accurate to 1 fps.
-		SafeRemoveEntityDelayed(self, FrameTime() + 1);
+		if (SERVER) then
+			SafeRemoveEntityDelayed(self, FrameTime() + 1);
+		end
 	end
 end
