@@ -21,6 +21,7 @@ PARTICLE.LifeTime 	= 0;
 PARTICLE.Dirty 		= false;
 
 function PARTICLE:SetupDataTables()
+	self:NetworkVar("Bool", 0, "IsServer");
 	self:NetworkVar("Float", 0, "LifeTime");
 end
 
@@ -36,6 +37,10 @@ function PARTICLE:Initialize()
 	-- lifetime, simply avoid calling SetLifeTime on your particle in InitializeParticles().
 	if (self:GetLifeTime() == 0) then
 		self:SetLifeTime(self.LifeTime);
+	end
+
+	if (SERVER) then
+		self:SetIsServer(true);
 	end
 
 	if (CLIENT) then
@@ -83,7 +88,7 @@ function PARTICLE:Destroy()
 		-- Theory: To prevent client side models from not being garbage collected,
 		-- we set a 1 second delay + the server's tickrate. This should prevent
 		-- desync during lag and be accurate to 1 fps.
-		if (SERVER) then
+		if ((SERVER && self:GetIsServer()) || (CLIENT && !self:GetIsServer())) then
 			SafeRemoveEntityDelayed(self, FrameTime() + 1);
 		end
 	end
