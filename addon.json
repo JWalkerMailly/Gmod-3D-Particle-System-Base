@@ -4,6 +4,11 @@
 	"tags": ["build"],
 	"ignore":
 	[
-		"*.jpg"
+		"*.git*",
+		"*.gitignore*",
+		"*addon.txt*",
+		"*readme*",
+		"*.md",
+		"*LICENSE*"
 	]
 }
