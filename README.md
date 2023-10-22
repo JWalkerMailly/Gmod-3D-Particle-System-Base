@@ -64,7 +64,7 @@ end
 function ENT:InitializeParticles()
 
 	-- Test particle, as found in 3d_particle_test. The second parameter (self) will automatically add the effect to the system's Particles array.
-	local effect = ParticleEffect3D:New("models/hunter/misc/shell2x2.mdl", self);
+	local effect = Particle3D:New("models/hunter/misc/shell2x2.mdl", self);
 	effect:SetMaterial("Models/effects/comball_sphere");
 	effect:SetPos(self:GetPos());
 	effect:SetLifeTime(0.6);
@@ -107,7 +107,7 @@ The *3d_particle_system* is a regular entity and to that effect, any base entity
 |--|--|--|
 | OnDestroy | Shared | Callback when the particle system dies. |
 
-### ParticleEffect3D Properties
+### Particle3D Properties
 Here is a list of all available properties for animating a particle effect. Please note that all animation properties are reliant on LifeTime. LifeTime is used to compute a delta [0..1] to be used as interpolation for the duration of the effect. Each property has its own Getter/Setter.
 | Property | Type | Usage |
 |--|--|--|
