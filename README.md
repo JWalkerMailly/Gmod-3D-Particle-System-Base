@@ -1,6 +1,8 @@
 # 3D Particle System Base
 
-### Description
+![Steam Downloads](https://img.shields.io/steam/downloads/2890316061)
+![Steam Favorites](https://img.shields.io/steam/favorites/2890316061)
+![Steam File Size](https://img.shields.io/steam/size/2890316061)\
 Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity. Workshop:
 https://steamcommunity.com/sharedfiles/filedetails/?id=2890316061
 
