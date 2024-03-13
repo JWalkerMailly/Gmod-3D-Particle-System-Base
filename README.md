@@ -3,12 +3,17 @@
 ![Steam Downloads](https://img.shields.io/steam/downloads/2890316061)
 ![Steam Favorites](https://img.shields.io/steam/favorites/2890316061)
 ![Steam File Size](https://img.shields.io/steam/size/2890316061)\
-Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity. Workshop:
-https://steamcommunity.com/sharedfiles/filedetails/?id=2890316061
+Lua base used to create 3D particle systems using models. The system will create ClientsideModels inside a single entity.
+
+[Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2890316061)
 
 ### How to use
-The prefered method of creating a particle system is to use the 3D Particle System Editor addon in conjunction with this base. Please see the following link for more information:
-https://github.com/JWalkerMailly/Gmod-3D-Particle-System-Editor
+The prefered method of creating a particle system is to use the 3D Particle System Editor addon in conjunction with this base. Please see the following link for more information: 
+
+[3D Particle System Editor](https://github.com/JWalkerMailly/Gmod-3D-Particle-System-Editor)
+
+<details>
+<summary><strong>Legacy</strong></summary>
 
 Nevertheless, if you seek a minor performance increase, the prefered method would be to create your particle system from scratch using the provided base. Inside this project, you will find two bases to derive from; *3d_particle_system* (deprecated) and *3d_particle_system_base* (prefered). Please note that any particle system created manually **cannot be edited with the particle editor addon (yet)**.
 
@@ -141,3 +146,4 @@ Here is a list of all available properties for animating a particle effect. Plea
 | EndScale | Float | *Optional*: The target scale of the effect. |
 | ScaleFunctionMod | Float | *Optional*: Multiplier influencing the animation rate of the scale. |
 | ThinkFunction | Function | *Optional*: Function used to control the behavior of the particle. Signature is of the form *function(particle)* where particle is your instance. |
+</details>
