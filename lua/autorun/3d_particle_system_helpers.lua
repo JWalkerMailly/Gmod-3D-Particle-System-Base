@@ -53,6 +53,7 @@ ParticleSystem3D = function(particleName, position, angles, lifetime, parent, at
 	effect:SetLifeTime(lifetime);
 	effect:SetConfig(particleName);
 	if (parent != NULL && parent != nil && parent:IsValid() && IsEntity(parent)) then
+		effect:SetPos(parent:GetPos());
 		effect:SetParent(parent, attach || 0);
 	end
 	effect:Spawn();
