@@ -1,4 +1,8 @@
 
+if (SERVER) then
+	resource.AddWorkshop("2890316061");
+end
+
 game.__3DParticleCache = {};
 
 -- Add custom hook onto game table in order to support 3D particle configuration files.
